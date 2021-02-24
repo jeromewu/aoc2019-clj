@@ -6,6 +6,8 @@ pom.xml.asc
 /classes/
 /target/
 /checkouts/
+.lsp/
+.clj-kondo/
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/
