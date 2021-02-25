@@ -86,7 +86,7 @@
         {opcode :opcode} pars
         np (partial nth-par pars)]
     (if (= (take-last 2 opcode) '(\0 \4))
-      (concat out (list (np 1)))
+      (conj out (np 1))
       out)))
 
 (defn update-base [ctx pars]
@@ -142,7 +142,7 @@
 
 (defn p1 [filename in]
   (->>
-    (hash-map :ptr 0 :in in :out '() :base 0 :prog (read-input filename))
+    (hash-map :ptr 0 :in in :out [] :base 0 :prog (read-input filename))
     (ic-com)
     (:out)
     (last)))
