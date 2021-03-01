@@ -2,13 +2,16 @@
 
 (defn assoc-col [index v _col]
   (let [
-        col (if (>= index (count _col)) (take (+ 1 index) (concat _col (repeat "0")))  _col)]
-    (map-indexed #(if (= index %1) (str v) %2) col)))
+        len (count _col)
+        diff (- (inc index) len)
+        col (if (pos? diff) (into _col (vec (repeat diff "0"))) _col)]
+    (assoc col index (str v))))
 
 (defn read-input [filename]
   (->>
     (slurp filename)
-    (re-seq #"[\d|-]+")))
+    (re-seq #"[\d|-]+")
+    (vec)))
 
 (defn pad [opcode]
   (->>
@@ -147,5 +150,4 @@
     (:out)
     (last)))
 
-(p1 "data/d05-input0.txt" '("8"))
-(p1 "data/d11-input.txt" '("0"))
+(p1 "data/d05-input0.txt" ["8"])
