@@ -53,17 +53,39 @@
       [0 0]
       #{}
       0
-      1)
+      1N)
     (#(nth % 3))))
 
+(defn get-poss' [poss tiles]
+  (reduce
+    (fn [poss' pos]
+      (concat
+        poss'
+        (reduce 
+          #(let [
+                 pos' (vec (map + pos %2))]
+             (if (= 1 (get tiles pos'))
+               (conj %1 pos')
+               %1))
+          []
+          (vals unit-map))))
+    []
+    poss))
+
+(defn get-mins [poss tiles mins]
+  (let [
+        tiles' (reduce #(assoc %1 %2 3N) tiles poss)
+        poss' (get-poss' poss tiles')]
+    (if (= 0 (count poss'))
+      mins
+      (recur poss' tiles' (inc mins)))))
+
 (defn p2 [filename]
-  (->>
-    (get-tiles
-      {:ptr 0 :in [] :out [] :base 0 :prog (d05/read-input filename)}
-      [0 0]
-      {}
-      1N)
-    (#(nth % 2))))
+  (let [
+        ctx {:ptr 0 :in [] :out [] :base 0 :prog (d05/read-input filename)}
+        tiles (nth (get-tiles ctx [0 0] {} 1N) 2)
+        tank-pos (reduce #(if (= 2 (val %2)) (reduced (key %2)) %1) nil tiles)]
+    (get-mins (vector tank-pos) tiles 0)))
 
 (defn main [args]
   (prn (p1 "data/d15-input.txt"))
