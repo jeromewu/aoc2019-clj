@@ -46,19 +46,15 @@
       (take 8)
       (reduce str))))
 
+(defn p2-back [digits]
+  (reductions #(mod (+ %1 %2) 10) digits))
+
 (defn p2 [filename n-phases]
   (let [digits (read-input filename)
         digits-repeated (reduce into (repeat 10000 digits))
-        offset (Integer/parseInt (reduce str (take 7 digits)))
-        _ (prn "digits count = " (count digits-repeated))
-        _ (prn "offset =" offset)]
-    (->>
-      (fft 0 n-phases digits-repeated)
-      (drop offset)
-      (take 8)
-      (reduce str))))
-    
+        offset (Integer/parseInt (reduce str (take 7 digits)))]
+    (reduce str (take 8 (reverse (nth (iterate p2-back (reverse (drop offset digits-repeated))) n-phases))))))
 
 (defn main [args]
-  ; (prn (p1 "data/d16-input.txt" 100))
-  (prn (p2 "data/d16-input2.txt" 100)))
+  (prn (p1 "data/d16-input.txt" 100))
+  (prn (p2 "data/d16-input.txt" 100)))
